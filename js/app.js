@@ -1,7 +1,23 @@
 /*
  * Create a list that holds all of your cards
  */
-var cards = ["diamond", "diamond", "paperPlane", "paperPlane", "anchor", "anchor", "bolt", "bolt", "cube", "cube", "leaf", "leaf", "bicycle", "bicycle", "bomb", "bomb"];
+
+var cards = ["diamond", "diamond", "paper-plane", "paper-plane", "anchor", "anchor", "bolt", "bolt", "cube", "cube", "leaf", "leaf", "bicycle", "bicycle", "bomb", "bomb"];
+const wobble = ["animated", "wobble"];
+const bounce = ["animated", "bounce"];
+var openCardsList = [];
+var lockedCards = [];
+var targetsList = [];
+var delayInMilliseconds = 2000;
+var movement = 0;
+var stars = 3;
+
+//
+
+//var cardList = $('.deck > .card > i');
+
+//
+//console.log(cardList);
 
 /*
  * Display the cards on the page
@@ -11,6 +27,10 @@ var cards = ["diamond", "diamond", "paperPlane", "paperPlane", "anchor", "anchor
  */
 
 // Shuffle function from http://stackoverflow.com/a/2450976
+
+shuffle(cards);
+buildCardsHTML();
+
 function shuffle(array) {
     var currentIndex = array.length,
         temporaryValue, randomIndex;
@@ -26,18 +46,202 @@ function shuffle(array) {
     return array;
 }
 
-shuffle(cards);
 
-console.log(cards);
-for (let i = 0; i < cards.length; i++) {
-    const deck = document.querySelector(".deck");
-    let liElement = document.createElement('li');
-    deck.appendChild(liElement);
-    let cardName = cards[i];
-    let cardHTML = liElement.className = 'card fa fa-' + cardName;
 
+
+var resetButton = document.getElementsByClassName('restart');
+resetButton[0].addEventListener('click', reset);
+
+function buildCardsHTML() {
+    for (var i = 0; i < cards.length; i++) {
+        var deck = document.querySelector(".deck");
+        var liElement = document.createElement('li');
+        deck.appendChild(liElement);
+        var cardName = cards[i];
+        liElement.className = 'card fa fa-' + cardName + ' hide';
+        liElement.addEventListener('click', displayCard);
+    }
+}
+
+
+function displayCard(e) {
+    if (targetsList.length < 2) {
+        e.target.classList.add('open');
+        e.target.removeEventListener('click', displayCard);
+        console.log('click');
+
+        matchCheck(e);
+        console.log(targetsList);
+    }
 
 }
+
+
+function matchCheck(e) {
+    e.target.classList.add("show");
+    targetsList.push(e.target);
+    if (openCardsList.length < 2) {
+        openCardsList.push(e.target.className);
+        if (openCardsList.length === 2) {
+            if (openCardsList[0] === openCardsList[1]) {
+                console.log('match!');
+                incMovement();
+                targetsList.push((e.target));
+                lockCards(e);
+            } else {
+                console.log('no match');
+                incMovement();
+
+                hideCards(e);
+
+            }
+        }
+    }
+}
+
+function clearArrays() {
+    openCardsList = [];
+    targetsList = [];
+}
+
+function lockCards(e) {
+    console.log('lock cards');
+    lockedCards.push(targetsList[0]);
+    lockedCards.push(targetsList[1]);
+    console.log(lockedCards);
+    targetsList[0].classList.add('match');
+    targetsList[1].classList.add('match');
+    targetsList[0].classList.add(...bounce);
+    targetsList[1].classList.add(...bounce);
+    targetsList[0].classList.remove("hide");
+    targetsList[1].classList.remove("hide");
+    
+
+    clearArrays();
+    //test for win by determining 16 locked cards in array
+    if (lockedCards.length === cards.length) {
+        displayWin(movement, stars);
+    }
+
+}
+
+function hideCards(e) {
+    //add styling and animation for mismatch//
+    targetsList[0].classList.add("mismatch");
+    targetsList[1].classList.add("mismatch");
+    targetsList[0].classList.add(...wobble);
+    targetsList[1].classList.add(...wobble);
+
+    //set delay for mismatch//
+    setTimeout(function() {
+        //hides and removes styling after mismatch//
+        targetsList[0].classList.add("hide");
+        targetsList[1].classList.add("hide");
+
+        targetsList[0].classList.remove("mismatch");
+        targetsList[1].classList.remove("mismatch");
+        targetsList[0].classList.remove(...wobble);
+        targetsList[1].classList.remove(...wobble);
+        targetsList[0].classList.remove("show");
+        targetsList[1].classList.remove("show");
+        targetsList[0].classList.remove("open");
+        targetsList[1].classList.remove("open");
+        console.log('hide cards');
+
+        //add back event listeners afer mismatch//
+        targetsList[0].addEventListener('click', displayCard);
+        targetsList[1].addEventListener('click', displayCard);
+        clearArrays();
+    }, delayInMilliseconds);
+
+}
+
+function incMovement(e) {
+    movement++;
+    var moves = document.querySelector(".moves");
+    moves.innerHTML = (movement);
+    determineStars();
+
+}
+
+function determineStars() {
+    if (movement === 15) {
+        var $firstStar = $('.stars > li:eq(0) > i');
+        $firstStar.removeClass('fa fa-star').addClass('fa fa-star-o');
+        stars--;
+        console.log('remove star');
+
+    } else if (movement === 12) {
+        var $secondStar = $('.stars > li:eq(1) > i');
+        $secondStar.removeClass('fa fa-star').addClass('fa fa-star-o');
+        stars--
+        console.log('remove star');
+    } else if (movement === 9) {
+        var $thirdStar = $('.stars > li:eq(2) > i');
+        $thirdStar.removeClass('fa fa-star').addClass('fa fa-star-o');
+        stars--;
+        console.log('remove star');
+
+    }
+}
+function displayWin(movement, stars) {
+    destroyCards();
+
+    var deck = document.querySelector(".deck");
+    deck.classList.add('win');
+    var div = document.createElement('div');
+    div.classList.add('winText');
+    deck.appendChild(div);
+    var title = document.createElement('h1');
+    var subtitle = document.createElement('h4');
+    var button = document.createElement('button');
+    title.classList.add('title');
+    subtitle.classList.add('subtitle');
+    button.classList.add('button');
+    div.appendChild(title);
+    div.appendChild(subtitle);
+    div.appendChild(button);
+    title.innerHTML = "Congrats! You Won!";
+    subtitle.innerHTML = "With " + movement + " moves and " + stars + " stars! Wooo!";
+    button.innerHTML = "Play again!";
+    button.addEventListener('click', removeWinScreen);
+
+}
+
+function removeWinScreen() {
+    var winScreen = $('.winText');
+    winScreen.remove('.winText');
+    var deck = document.querySelector(".deck");
+    deck.classList.remove('win');
+    reset();
+}
+
+function reset() {
+    movement = 0;
+    stars = 3;
+    shuffle(cards);
+    
+    destroyCards();
+    lockedCards = [];
+    
+    var $resetStars = $('.stars > li > i');
+    $resetStars.removeClass('fa fa-star-o').addClass('fa fa-star');
+    
+    buildCardsHTML();
+    console.log('reset');
+    
+}
+
+function destroyCards() {
+    var cards = $('.deck > li');
+    cards.remove('.card');
+    var moves = document.querySelector(".moves");
+    moves.innerHTML = (movement);
+    
+
+}
+
+
 
 
 /*
@@ -50,9 +254,3 @@ for (let i = 0; i < cards.length; i++) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
-
-document.getElementsByClassName("card").addEventListener('click', displayCard);
-
-function displayCard(){
-    console.log('display card');
-}
