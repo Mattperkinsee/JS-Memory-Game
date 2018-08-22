@@ -11,9 +11,10 @@ var targetsList = [];
 var delayInMilliseconds = 2000;
 var movement = 0;
 var stars = 3;
-
+var scorePanel = document.querySelector('.score-panel');
+var header = document.querySelector('header');
+var checkMark = document.querySelector('.checkmark');
 //
-
 //var cardList = $('.deck > .card > i');
 
 //
@@ -28,7 +29,7 @@ var stars = 3;
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 
-shuffle(cards);
+//shuffle(cards);
 buildCardsHTML();
 
 function shuffle(array) {
@@ -165,18 +166,18 @@ function incMovement(e) {
 }
 
 function determineStars() {
-    if (movement === 15) {
+    if (movement === 18) {
         var $firstStar = $('.stars > li:eq(0) > i');
         $firstStar.removeClass('fa fa-star').addClass('fa fa-star-o');
         stars--;
         console.log('remove star');
 
-    } else if (movement === 12) {
+    } else if (movement === 15) {
         var $secondStar = $('.stars > li:eq(1) > i');
         $secondStar.removeClass('fa fa-star').addClass('fa fa-star-o');
         stars--
         console.log('remove star');
-    } else if (movement === 9) {
+    } else if (movement === 12) {
         var $thirdStar = $('.stars > li:eq(2) > i');
         $thirdStar.removeClass('fa fa-star').addClass('fa fa-star-o');
         stars--;
@@ -184,14 +185,23 @@ function determineStars() {
 
     }
 }
+displayWin(1,3);
 function displayWin(movement, stars) {
+     /*remove cards and hide header*/
+    scorePanel.classList.add('hide');
+    header.classList.add('hide');
     destroyCards();
-
+    
     var deck = document.querySelector(".deck");
     deck.classList.add('win');
+   var checkMark = document.querySelector(".checkmark");
+    
     var div = document.createElement('div');
+   
     div.classList.add('winText');
+    div.classList.add(...bounce);
     deck.appendChild(div);
+     checkMark.classList.remove('hideCheck');
     var title = document.createElement('h1');
     var subtitle = document.createElement('h4');
     var button = document.createElement('button');
@@ -213,6 +223,9 @@ function removeWinScreen() {
     winScreen.remove('.winText');
     var deck = document.querySelector(".deck");
     deck.classList.remove('win');
+    scorePanel.classList.remove('hide');
+    header.classList.remove('hide');
+    checkMark.classList.add('hideCheck');
     reset();
 }
 

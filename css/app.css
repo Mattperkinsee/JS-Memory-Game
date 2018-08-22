@@ -17,7 +17,8 @@ body {
 }
 
 body {
-    background: #ffffff url('../img/geometry2.png'); /* Background pattern from Subtle Patterns */
+    background: #ffffff url('../img/geometry2.png');
+    /* Background pattern from Subtle Patterns */
     font-family: 'Coda', cursive;
 }
 
@@ -32,6 +33,7 @@ h1 {
     font-family: 'Open Sans', sans-serif;
     font-weight: 300;
 }
+
 
 /*
  * Styles for the deck of cards
@@ -80,11 +82,13 @@ h1 {
     background: #02ccba;
     font-size: 33px;
 }
-.deck .card.mismatch{
+
+.deck .card.mismatch {
     cursor: default;
     background: red;
     font-size: 33px;
 }
+
 
 /*
  * Styles for the Score Panel
@@ -112,23 +116,27 @@ h1 {
     float: right;
     cursor: pointer;
 }
-.hide{
-    font-size:0;
-}
-.show{
-    font-size:36px;
-}
-.win{
-    background:white;
+
+.hide {
+    font-size: 0;
 }
 
-
-.winText{
-    width:100%;
-    text-align:center;
+.show {
+    font-size: 36px;
 }
-.button{
-    background-color: #4CAF50; /* Green */
+
+.win {
+    background: white;
+}
+
+.winText {
+    width: 100%;
+    text-align: center;
+}
+
+.button {
+    background-color: #4CAF50;
+    /* Green */
     border: none;
     color: white;
     padding: 15px 32px;
@@ -136,4 +144,57 @@ h1 {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+}
+
+.checkmark__circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+    stroke: green;
+    fill: none;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+.hideCheck{
+    display:none !important;
+}
+.checkmark {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 2;
+    stroke: green;
+    stroke-miterlimit: 10;
+    margin: 0px auto 0px auto;
+    box-shadow: inset 0px 0px 0px #fff;
+    animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+}
+
+.checkmark__check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+@keyframes stroke {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes scale {
+    0%, 100% {
+        transform: none;
+    }
+    50% {
+        transform: scale3d(1.1, 1.1, 1);
+    }
+}
+
+@keyframes fill {
+    100% {
+        box-shadow: inset 0px 0px 0px 30px #fff;
+    }
 }
