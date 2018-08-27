@@ -14,6 +14,8 @@ var stars = 3;
 var scorePanel = document.querySelector('.score-panel');
 var header = document.querySelector('header');
 var checkMark = document.querySelector('.checkmark');
+var seconds =0;
+var minutes= 0;
 //
 //var cardList = $('.deck > .card > i');
 
@@ -28,6 +30,10 @@ var checkMark = document.querySelector('.checkmark');
  */
 
 // Shuffle function from http://stackoverflow.com/a/2450976
+function timer() {
+    t = setTimeout(add, 1000);
+}
+timer();
 
 shuffle(cards);
 buildCardsHTML();
