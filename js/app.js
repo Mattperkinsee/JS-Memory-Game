@@ -29,7 +29,7 @@ var checkMark = document.querySelector('.checkmark');
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 
-//shuffle(cards);
+shuffle(cards);
 buildCardsHTML();
 
 function shuffle(array) {
@@ -53,21 +53,27 @@ function shuffle(array) {
 var resetButton = document.getElementsByClassName('restart');
 resetButton[0].addEventListener('click', reset);
 
+
 function buildCardsHTML() {
-    for (var i = 0; i < cards.length; i++) {
-        var deck = document.querySelector(".deck");
+    for (let i = 0; i < cards.length; i++) {
+        let deck = document.querySelector(".deck");
         var liElement = document.createElement('li');
         deck.appendChild(liElement);
-        var cardName = cards[i];
+        let cardName = cards[i];
         liElement.className = 'card fa fa-' + cardName + ' hide';
         liElement.addEventListener('click', displayCard);
+
+
     }
+   
+
 }
 
 
 function displayCard(e) {
     if (targetsList.length < 2) {
         e.target.classList.add('open');
+        e.target.classList.add("show");
         e.target.removeEventListener('click', displayCard);
         console.log('click');
 
@@ -79,7 +85,7 @@ function displayCard(e) {
 
 
 function matchCheck(e) {
-    e.target.classList.add("show");
+    //    e.target.classList.add("show");
     targetsList.push(e.target);
     if (openCardsList.length < 2) {
         openCardsList.push(e.target.className);
@@ -116,7 +122,7 @@ function lockCards(e) {
     targetsList[1].classList.add(...bounce);
     targetsList[0].classList.remove("hide");
     targetsList[1].classList.remove("hide");
-    
+
 
     clearArrays();
     //test for win by determining 16 locked cards in array
@@ -185,23 +191,24 @@ function determineStars() {
 
     }
 }
-displayWin(1,3);
+
 function displayWin(movement, stars) {
-     /*remove cards and hide header*/
+    /*remove cards and hide header*/
     scorePanel.classList.add('hide');
     header.classList.add('hide');
     destroyCards();
-    
-    var deck = document.querySelector(".deck");
+
+    let deck = document.querySelector(".deck");
+    deck.style.alignContent = "center";
     deck.classList.add('win');
-   var checkMark = document.querySelector(".checkmark");
-    
+    var checkMark = document.querySelector(".checkmark");
+
     var div = document.createElement('div');
-   
+
     div.classList.add('winText');
     div.classList.add(...bounce);
     deck.appendChild(div);
-     checkMark.classList.remove('hideCheck');
+    checkMark.classList.remove('hideCheck');
     var title = document.createElement('h1');
     var subtitle = document.createElement('h4');
     var button = document.createElement('button');
@@ -219,6 +226,8 @@ function displayWin(movement, stars) {
 }
 
 function removeWinScreen() {
+    var deck = document.querySelector(".deck");
+    deck.style.alignContent = null;
     var winScreen = $('.winText');
     winScreen.remove('.winText');
     var deck = document.querySelector(".deck");
@@ -233,16 +242,16 @@ function reset() {
     movement = 0;
     stars = 3;
     shuffle(cards);
-    
+    clearArrays();
     destroyCards();
     lockedCards = [];
-    
+
     var $resetStars = $('.stars > li > i');
     $resetStars.removeClass('fa fa-star-o').addClass('fa fa-star');
-    
+
     buildCardsHTML();
     console.log('reset');
-    
+
 }
 
 function destroyCards() {
@@ -250,7 +259,7 @@ function destroyCards() {
     cards.remove('.card');
     var moves = document.querySelector(".moves");
     moves.innerHTML = (movement);
-    
+
 
 }
 
